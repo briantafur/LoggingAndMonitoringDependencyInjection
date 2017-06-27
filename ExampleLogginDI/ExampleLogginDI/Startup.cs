@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using ExampleLogginDI.Data;
 using ExampleLogginDI.Models;
 using ExampleLogginDI.Services;
+using AppLogger.Service;
 
 namespace ExampleLogginDI
 {
@@ -54,7 +55,7 @@ namespace ExampleLogginDI
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             //Add the monster service
-            services.AddTransient<IMonsterService, MonsterService>();
+            services.AddTransient<AppLogger.Service.ILogger, Log4Net>();
 
         }
 

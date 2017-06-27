@@ -4,19 +4,18 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
-using ExampleLogginDI.Services;
+using AppLogger.Service;
 
 namespace ExampleLogginDI.Controllers
 {
     public class HomeController : Controller
     {
 
-        private readonly IMonsterService _monsterService;
+        private readonly ILogger _log;
 
-        public HomeController(IMonsterService monsterService)
+        public HomeController(ILogger log)
         {
-            _monsterService = monsterService;
-            _monsterService.Log("Haciendo una prueba del log....");
+            _log = log;
             Console.WriteLine("Final del constructor");
             
         }
@@ -24,7 +23,7 @@ namespace ExampleLogginDI.Controllers
 
         public IActionResult Index()
         {
-            ViewBag.Message = _monsterService.Log("nada");
+            ViewBag.Message = _log.Log("nada");
             return View();
             
         }
