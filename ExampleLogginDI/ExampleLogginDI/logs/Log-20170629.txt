@@ -1,0 +1,7 @@
+2017-06-29 13:28:52.528 -05:00 [Information] Info log
+2017-06-29 13:28:52.596 -05:00 [Debug] Debug log
+2017-06-29 13:28:52.597 -05:00 [Error] Error log
+System.Exception: alguna vaina
+2017-06-29 13:28:52.597 -05:00 [Warning] Warning Log
+2017-06-29 13:28:52.598 -05:00 [Fatal] Fatal log
+System.Exception: alguna vaina número 2
