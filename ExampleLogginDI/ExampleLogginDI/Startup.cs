@@ -55,10 +55,10 @@ namespace ExampleLogginDI
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             //Add the Logger service
-            var key = Convert.ToString(Configuration.GetSection("AzureKey").GetValue<String>("App_Insights_Logging_Key"));
-            services.AddTransient<Logger.Services.LoggerInterface,
-            Logger.Services.AppInsight>((_) => new Logger.Services.AppInsight(key));
-            //services.AddTransient<Logger.Services.LoggerInterface, Logger.Services.Serilog>();
+            //var key = Convert.ToString(Configuration.GetSection("AzureKey").GetValue<String>("App_Insights_Logging_Key"));
+            //services.AddTransient<Logger.Services.LoggerInterface,
+            //Logger.Services.AppInsight>((_) => new Logger.Services.AppInsight(key));
+            services.AddTransient<Logger.Services.LoggerInterface, Logger.Services.Serilog>();
 
         }
 

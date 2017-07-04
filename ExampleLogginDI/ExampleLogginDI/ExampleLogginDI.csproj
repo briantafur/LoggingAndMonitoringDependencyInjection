@@ -12,6 +12,7 @@
     <UserSecretsId>aspnet-ExampleLogginDI-7f40295f-36c7-45f2-b11c-2b4547f8d306</UserSecretsId>
   </PropertyGroup>
   <ItemGroup>
+    <PackageReference Include="Logger" Version="1.0.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.0.0" />
     <PackageReference Include="Microsoft.AspNetCore" Version="1.1.2" />
     <PackageReference Include="Microsoft.AspNetCore.Authentication.Cookies" Version="1.1.2" />
@@ -35,9 +36,6 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="logs\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Logger\Logger.csproj" />
   </ItemGroup>
 
 </Project>
