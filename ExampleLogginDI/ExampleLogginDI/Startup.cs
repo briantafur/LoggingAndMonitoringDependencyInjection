@@ -54,8 +54,11 @@ namespace ExampleLogginDI
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
-            //Add the monster service
-            services.AddTransient<Logger.Services.LoggerInterface, Logger.Services.Serilog>();
+            //Add the Logger service
+            var key = Convert.ToString(Configuration.GetSection("AzureKey").GetValue<String>("App_Insights_Logging_Key"));
+            services.AddTransient<Logger.Services.LoggerInterface,
+            Logger.Services.AppInsight>((_) => new Logger.Services.AppInsight(key));
+            //services.AddTransient<Logger.Services.LoggerInterface, Logger.Services.Serilog>();
 
         }
 

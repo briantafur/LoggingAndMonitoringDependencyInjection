@@ -15,7 +15,7 @@ namespace ExampleLogginDI.Controllers
 
         public HomeController(LoggerInterface log)
         {
-            _log = log;
+              _log = log;
             //_log = LogManager.GetLogger(typeof(HomeController));
             //_log.Info("Testing logger");
             //Console.WriteLine("Final del constructor");
@@ -26,11 +26,11 @@ namespace ExampleLogginDI.Controllers
         public IActionResult Index()
         {
             ViewBag.Message = "Haciendo prueba de log";
-            _log.Info("Info log");
-            _log.Debug("Debug log");
-            _log.Error(new Exception("alguna vaina"), "Error log");
-            _log.Warning("Warning Log");
-            _log.Fatal(new Exception("alguna vaina número 2"), "Fatal log");
+            _log.Info("Info Log", GetType());
+            _log.Debug("Debug log", GetType());
+            _log.Error(new Exception("Error Log"), GetType());
+            _log.Warning("Warning Log", GetType());
+            _log.Fatal(new Exception("Fatal Log"), GetType());
             return View();
 
         }
