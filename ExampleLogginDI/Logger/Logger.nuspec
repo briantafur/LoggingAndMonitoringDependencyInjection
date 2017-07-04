@@ -1,21 +1,23 @@
-<?xml version="1.0"?>
-<package >
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
-    <id>Yuxi.Logger</id>
+    <id>Logger</id>
     <version>1.1.0</version>
-    <title>Logger</title>
-    <authors>Brian Tafur, Daniel Henao</authors>
+    <authors>Brian Tafur</authors>
     <owners>Yuxi Global</owners>
-    <licenseUrl>http://LICENSE_URL_HERE_OR_DELETE_THIS_LINE</licenseUrl>
-    <projectUrl>http://PROJECT_URL_HERE_OR_DELETE_THIS_LINE</projectUrl>
-    <iconUrl>http://ICON_URL_HERE_OR_DELETE_THIS_LINE</iconUrl>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>This is a nugget to create loggers, serilog for local logs and App.Insights for azure logs</description>
-    <releaseNotes>Summary of changes made in this release of the package.</releaseNotes>
-    <copyright>Copyright 2017</copyright>
-    <tags>Log Serilog Insights</tags>
+    <description>A package to create logs with serilog and appinsights</description>
+    <dependencies>
+      <group targetFramework=".NETCoreApp1.1">
+        <dependency id="Microsoft.NETCore.App" version="1.1.2" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
+        <dependency id="Serilog" version="2.5.0" exclude="Build,Analyzers" />
+        <dependency id="Serilog.Sinks.Literate" version="2.1.0" exclude="Build,Analyzers" />
+        <dependency id="Serilog.Sinks.RollingFile" version="3.3.0" exclude="Build,Analyzers" />
+      </group>
+    </dependencies>
   </metadata>
   <files>
-    <file src="bin\Debug\netcoreapp1.1\Logger.dll" target="lib"></file>
+    <file src="C:\Users\btafur\Source\Repos\LoggingAndMonitoringDependencyInjection\ExampleLogginDI\Logger\bin\Debug\netcoreapp1.1\Logger.dll" target="lib\netcoreapp1.1\Logger.dll" />
   </files>
 </package>
