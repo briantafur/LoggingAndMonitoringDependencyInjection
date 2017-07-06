@@ -19,7 +19,6 @@ namespace ExampleLogginDI.Controllers
             //_log = LogManager.GetLogger(typeof(HomeController));
             //_log.Info("Testing logger");
             //Console.WriteLine("Final del constructor");
-
         }
 
 
@@ -32,7 +31,6 @@ namespace ExampleLogginDI.Controllers
             _log.Warning("Warning Log", GetType());
             _log.Fatal(new Exception("Fatal Log"), GetType());
             return View();
-
         }
 
         public IActionResult About()

@@ -3,7 +3,7 @@
   <metadata>
     <id>Logger</id>
     <version>1.1.0</version>
-    <authors>Brian Tafur</authors>
+    <authors>Brian Tafur, Daniel Henao</authors>
     <owners>Yuxi Global</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
     <description>A package to create logs with serilog and appinsights</description>
