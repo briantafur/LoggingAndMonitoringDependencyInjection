@@ -1,18 +1,6 @@
-﻿2017-07-06 09:09:52,143 [3] INFO  Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index: Info Log
-2017-07-06 09:09:52,307 [3] ERROR Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index
+﻿2017-07-06 09:40:33,542 [4] INFO  Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index: Info Log
+2017-07-06 09:40:33,719 [4] ERROR Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index
 System.Exception: Error Log
-2017-07-06 09:09:52,315 [3] WARN  Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index: Warning Log
-2017-07-06 09:09:52,316 [3] FATAL Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index
-System.Exception: Fatal Log
-2017-07-06 09:10:58,162 [4] INFO  Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index: Info Log
-2017-07-06 09:10:58,237 [4] ERROR Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index
-System.Exception: Error Log
-2017-07-06 09:10:58,243 [4] WARN  Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index: Warning Log
-2017-07-06 09:10:58,243 [4] FATAL Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index
-System.Exception: Fatal Log
-2017-07-06 09:12:08,450 [4] INFO  Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index: Info Log
-2017-07-06 09:12:08,511 [4] ERROR Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index
-System.Exception: Error Log
-2017-07-06 09:12:08,518 [4] WARN  Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index: Warning Log
-2017-07-06 09:12:08,518 [4] FATAL Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index
+2017-07-06 09:40:33,727 [4] WARN  Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index: Warning Log
+2017-07-06 09:40:33,728 [4] FATAL Logger.Services.Log4Net - ExampleLogginDI.Controllers.HomeController Index
 System.Exception: Fatal Log
