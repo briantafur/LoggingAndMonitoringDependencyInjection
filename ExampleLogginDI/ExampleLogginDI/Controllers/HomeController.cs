@@ -11,14 +11,10 @@ namespace ExampleLogginDI.Controllers
     {
 
         private readonly LoggerInterface _log;
-        //private readonly ILog _log;
 
         public HomeController(LoggerInterface log)
         {
               _log = log;
-            //_log = LogManager.GetLogger(typeof(HomeController));
-            //_log.Info("Testing logger");
-            //Console.WriteLine("Final del constructor");
         }
 
 

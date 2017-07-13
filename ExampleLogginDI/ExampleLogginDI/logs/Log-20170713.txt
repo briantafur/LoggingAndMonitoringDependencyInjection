@@ -1,0 +1,7 @@
+2017-07-13 11:00:01.115 -05:00 [Information] ExampleLogginDI.Controllers.HomeController Index: Info Log
+2017-07-13 11:00:01.253 -05:00 [Debug] ExampleLogginDI.Controllers.HomeController Index: Debug log
+2017-07-13 11:00:01.256 -05:00 [Error] ExampleLogginDI.Controllers.HomeController Index
+System.Exception: Error Log
+2017-07-13 11:00:01.257 -05:00 [Warning] ExampleLogginDI.Controllers.HomeController Index: Warning Log
+2017-07-13 11:00:01.258 -05:00 [Fatal] ExampleLogginDI.Controllers.HomeController Index
+System.Exception: Fatal Log

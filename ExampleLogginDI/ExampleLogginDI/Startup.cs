@@ -12,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using ExampleLogginDI.Data;
 using ExampleLogginDI.Models;
 using ExampleLogginDI.Services;
+using Logger.Services;
 
 
 namespace ExampleLogginDI
@@ -55,11 +56,12 @@ namespace ExampleLogginDI
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             //Add the Logger service
-            var key = Convert.ToString(Configuration.GetSection("AzureKey").GetValue<String>("App_Insights_Logging_Key"));
-            services.AddTransient<Logger.Services.LoggerInterface,
-            Logger.Services.AppInsight>((_) => new Logger.Services.AppInsight(key));
-            //services.AddTransient<Logger.Services.LoggerInterface, Logger.Services.Serilog>();
-            //services.AddTransient<Logger.Services.LoggerInterface, Logger.Services.Log4Net>();
+            //var key = Convert.ToString(Configuration.GetSection("AzureKey").GetValue<String>("App_Insights_Logging_Key"));
+            //services.AddTransient<LoggerInterface, AppInsight>((_) => new AppInsight(key));
+
+
+            //services.AddTransient<LoggerInterface, Logger.Services.Serilog>((_) => new Logger.Services.Serilog("C:\\Users\\btafur\\Desktop"));
+            services.AddTransient<LoggerInterface, Log4Net>((_) => new Log4Net("C:\\Users\\btafur\\Desktop"));
 
         }
 

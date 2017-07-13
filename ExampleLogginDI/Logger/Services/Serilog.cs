@@ -7,14 +7,14 @@ using Serilog;
 
 namespace Logger.Services
 {
-    public class Serilog : LoggerInterface
+    public class Serilog : ILoggerInterface
     {
-        public Serilog()
+        public Serilog(String ruta)
         {
             Log.Logger = new LoggerConfiguration()
                .MinimumLevel.Debug()
                .WriteTo.LiterateConsole()
-               .WriteTo.RollingFile("logs\\Log-{Date}.txt")
+               .WriteTo.RollingFile(ruta + "\\Log-{Date}.txt")
                .CreateLogger();
         }
 
@@ -22,7 +22,7 @@ namespace Logger.Services
 
         public void Info(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            Log.Logger.Information(component.ToString()+ " " + methodName + ": " + message, component);
+            Log.Logger.Information(component.ToString() + " " + methodName + ": " + message, component);
         }
 
         public void Debug(string message, Type component, [CallerMemberName] string methodName = "")

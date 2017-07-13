@@ -8,43 +8,43 @@ using System.Threading.Tasks;
 
 namespace Logger.Services
 {
-    public class AppInsight : LoggerInterface
+    public class AppInsight : ILoggerInterface
     {
-        TelemetryClient client;
+        TelemetryClient Client;
 
         public AppInsight(String key)
         {
             TelemetryConfiguration.Active.InstrumentationKey = key;
-            client = new TelemetryClient();
+            Client = new TelemetryClient();
         }
 
         #region methods
 
         public void Info(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            client.TrackTrace("[Information] " + component.ToString() + " " + methodName + ": " + message);
+            Client.TrackTrace("[Information] " + component.ToString() + " " + methodName + ": " + message);
         }
 
         public void Debug(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            client.TrackTrace("[Debug] "+component.ToString() + " " + methodName + ": " + message);
+            Client.TrackTrace("[Debug] " + component.ToString() + " " + methodName + ": " + message);
         }
 
         public void Error(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            client.TrackException(exception);
+            Client.TrackException(exception);
         }
 
         public void Warning(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            client.TrackTrace("[Warning] " + component.ToString() + " " + methodName + ": " + message);
+            Client.TrackTrace("[Warning] " + component.ToString() + " " + methodName + ": " + message);
         }
 
         public void Fatal(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            client.TrackException(exception);
+            Client.TrackException(exception);
         }
-        
+
         #endregion
 
         #region Async methods
@@ -52,35 +52,35 @@ namespace Logger.Services
         public async Task InfoAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
             await Task.Factory.StartNew(() => {
-                client.TrackTrace("[Information] " + component.ToString() + " " + methodName + ": " + message);
-            });            
+                Client.TrackTrace("[Information] " + component.ToString() + " " + methodName + ": " + message);
+            });
         }
 
         public async Task DebugAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
             await Task.Factory.StartNew(() => {
-                client.TrackTrace("[Debug] " + component.ToString() + " " + methodName + ": " + message);
+                Client.TrackTrace("[Debug] " + component.ToString() + " " + methodName + ": " + message);
             });
         }
 
         public async Task ErrorAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
             await Task.Factory.StartNew(() => {
-                client.TrackException(exception);
+                Client.TrackException(exception);
             });
         }
 
         public async Task WarningAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
             await Task.Factory.StartNew(() => {
-                client.TrackTrace("[Warning] " + component.ToString() + " " + methodName + ": " + message);
+                Client.TrackTrace("[Warning] " + component.ToString() + " " + methodName + ": " + message);
             });
         }
 
         public async Task FatalAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
             await Task.Factory.StartNew(() => {
-                client.TrackException(exception);
+                Client.TrackException(exception);
             });
         }
 

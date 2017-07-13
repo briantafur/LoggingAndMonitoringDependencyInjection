@@ -15,19 +15,19 @@ using log4net.Repository;
 
 namespace Logger.Services
 {
-    public class Log4Net : LoggerInterface
+    public class Log4Net : ILoggerInterface
     {
 
-        public readonly ILog log = LogManager.GetLogger(typeof(Log4Net));
+        public readonly ILog Log = LogManager.GetLogger(typeof(Log4Net));
 
-        public Log4Net()
+        public Log4Net(String ruta)
         {
-            Setup();
+            Setup(ruta);
         }
 
         #region Configuración
 
-        public static void Setup()
+        public static void Setup(String ruta)
         {
             ILoggerRepository[] nada = LogManager.GetAllRepositories();
             for (int i = 0; i < nada.Length; i++)
@@ -40,7 +40,8 @@ namespace Logger.Services
                 String date = DateTime.Now.ToString("yyyyMMdd");
                 RollingFileAppender roller = new RollingFileAppender();
                 roller.AppendToFile = true; //revisar
-                roller.File = @"logs\\Log-" + date + ".txt";
+                //roller.File = @"logs\\Log-" + date + ".txt";
+                roller.File = ruta + "\\Log - " + date + ".txt";
                 roller.Layout = patternLayout;
                 roller.MaxSizeRollBackups = 5;
                 roller.MaximumFileSize = "1GB";
@@ -64,27 +65,27 @@ namespace Logger.Services
 
         public void Info(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            log.Info(component.ToString() + " " + methodName + ": " + message);
+            Log.Info(component.ToString() + " " + methodName + ": " + message);
         }
 
         public void Debug(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            log.Debug(component.ToString() + " " + methodName + ": " + message);
+            Log.Debug(component.ToString() + " " + methodName + ": " + message);
         }
 
         public void Error(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            log.Error(component.ToString() + " " + methodName, exception);
+            Log.Error(component.ToString() + " " + methodName, exception);
         }
 
         public void Warning(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            log.Warn(component.ToString() + " " + methodName + ": " + message);
+            Log.Warn(component.ToString() + " " + methodName + ": " + message);
         }
 
         public void Fatal(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            log.Fatal(component.ToString() + " " + methodName, exception);
+            Log.Fatal(component.ToString() + " " + methodName, exception);
         }
 
         #endregion
@@ -95,7 +96,7 @@ namespace Logger.Services
         {
             await Task.Factory.StartNew(() =>
             {
-                log.Info(component.ToString() + " " + methodName + ": " + message);
+                Log.Info(component.ToString() + " " + methodName + ": " + message);
             });
         }
 
@@ -103,7 +104,7 @@ namespace Logger.Services
         {
             await Task.Factory.StartNew(() =>
             {
-                log.Debug(component.ToString() + " " + methodName + ": " + message);
+                Log.Debug(component.ToString() + " " + methodName + ": " + message);
             });
         }
 
@@ -111,7 +112,7 @@ namespace Logger.Services
         {
             await Task.Factory.StartNew(() =>
             {
-                log.Error(component.ToString() + " " + methodName, exception);
+                Log.Error(component.ToString() + " " + methodName, exception);
             });
         }
 
@@ -119,7 +120,7 @@ namespace Logger.Services
         {
             await Task.Factory.StartNew(() =>
             {
-                log.Warn(component.ToString() + " " + methodName + ": " + message);
+                Log.Warn(component.ToString() + " " + methodName + ": " + message);
             });
         }
 
@@ -127,7 +128,7 @@ namespace Logger.Services
         {
             await Task.Factory.StartNew(() =>
             {
-                log.Fatal(component.ToString() + " " + methodName, exception);
+                Log.Fatal(component.ToString() + " " + methodName, exception);
             });
         }
 
