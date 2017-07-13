@@ -56,12 +56,14 @@ namespace ExampleLogginDI
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
             //Add the Logger service
+            //Reading the key for azure in the appsettings.json
             //var key = Convert.ToString(Configuration.GetSection("AzureKey").GetValue<String>("App_Insights_Logging_Key"));
             //services.AddTransient<LoggerInterface, AppInsight>((_) => new AppInsight(key));
 
-
-            //services.AddTransient<LoggerInterface, Logger.Services.Serilog>((_) => new Logger.Services.Serilog("C:\\Users\\btafur\\Desktop"));
-            services.AddTransient<LoggerInterface, Log4Net>((_) => new Log4Net("C:\\Users\\btafur\\Desktop"));
+            //Reading the route for the log in the appsettings.json
+            var ruta = Convert.ToString(Configuration.GetSection("LogRoute").GetValue<String>("LocalRoute"));
+            services.AddTransient<ILoggerInterface, Logger.Services.Serilog>((_) => new Logger.Services.Serilog(ruta));
+            //services.AddTransient<ILoggerInterface, Log4Net>((_) => new Log4Net(ruta));
 
         }
 

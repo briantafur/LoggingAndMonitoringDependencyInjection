@@ -10,9 +10,9 @@ namespace ExampleLogginDI.Controllers
     public class HomeController : Controller
     {
 
-        private readonly LoggerInterface _log;
+        private readonly ILoggerInterface _log;
 
-        public HomeController(LoggerInterface log)
+        public HomeController(ILoggerInterface log)
         {
               _log = log;
         }
