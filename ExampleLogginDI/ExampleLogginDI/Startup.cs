@@ -55,15 +55,22 @@ namespace ExampleLogginDI
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();
 
-            //Add the Logger service
+            //Add the Logger services
+
             //Reading the key for azure in the appsettings.json
             //var key = Convert.ToString(Configuration.GetSection("AzureKey").GetValue<String>("App_Insights_Logging_Key"));
             //services.AddTransient<LoggerInterface, AppInsight>((_) => new AppInsight(key));
 
             //Reading the route for the log in the appsettings.json
-            var ruta = Convert.ToString(Configuration.GetSection("LogRoute").GetValue<String>("LocalRoute"));
-            services.AddTransient<ILoggerInterface, Logger.Services.Serilog>((_) => new Logger.Services.Serilog(ruta));
+            //var ruta = Convert.ToString(Configuration.GetSection("LogRoute").GetValue<String>("LocalRoute"));
+            //services.AddTransient<ILoggerInterface, Logger.Services.Serilog>((_) => new Logger.Services.Serilog(ruta));
             //services.AddTransient<ILoggerInterface, Log4Net>((_) => new Log4Net(ruta));
+
+            //Reading values to azure blob storage from appsettings.json
+            var storageAccountName = Convert.ToString(Configuration.GetSection("AzureStorage").GetValue<String>("Storage_Account_Name"));
+            var azureKey = Convert.ToString(Configuration.GetSection("AzureStorage").GetValue<String>("Azure_Storage_Key"));
+            var containerName = Convert.ToString(Configuration.GetSection("AzureStorage").GetValue<String>("Container_Name"));
+            services.AddTransient<ILoggerInterface, AzureBlobStorage>((_) => new AzureBlobStorage(storageAccountName, azureKey, containerName));
 
         }
 
