@@ -2,11 +2,11 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
   <metadata>
     <id>Logger</id>
-    <version>1.2.5</version>
+    <version>1.3.0</version>
     <authors>Brian Tafur, Daniel Henao</authors>
     <owners>Yuxi Global</owners>
     <requireLicenseAcceptance>false</requireLicenseAcceptance>
-    <description>A package to create logs with serilog, log4net and appinsights</description>
+    <description>A package to create logs with serilog, log4net and appinsights. Also the log files can be storage in azure blob storage</description>
     <dependencies>
       <group targetFramework=".NETCoreApp1.1">
         <dependency id="Microsoft.NETCore.App" version="1.1.2" exclude="Build,Analyzers" />
@@ -15,6 +15,7 @@
         <dependency id="Serilog.Sinks.Literate" version="2.1.0" exclude="Build,Analyzers" />
         <dependency id="Serilog.Sinks.RollingFile" version="3.3.0" exclude="Build,Analyzers" />
         <dependency id="log4net" version="2.0.8" exclude="Build, Analyzers"/>
+        <dependency id="WindowsAzure.Storage" version="8.1.4" exclude="Build, Analyzers"/>
       </group>
     </dependencies>
   </metadata>

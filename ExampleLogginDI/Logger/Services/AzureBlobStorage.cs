@@ -24,9 +24,6 @@ namespace Logger.Services
 
         public async void InitializeContainer(String StorageAccountName, String AzureKey, String ContainerName)
         {
-            //var StorageAccountName = "yuxiresearch";
-            //var AzureKey = "fjUQhzRIbeJw0v6Qph6iaqZw92qMOL4MPzVQQqrx3hmvGPWnQGZQIFhL9SPjF4J5mF1Ppese2YqM2Agsp4YhVA==";
-            //var ContainerName = "containerlog";
             var storageCredentials = new StorageCredentials(StorageAccountName, AzureKey);
             var cloudStorageAccount = new CloudStorageAccount(storageCredentials, true);
             var cloudBlobClient = cloudStorageAccount.CreateCloudBlobClient();
