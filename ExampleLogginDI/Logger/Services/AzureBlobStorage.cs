@@ -70,19 +70,7 @@ namespace Logger.Services
         {
             String date = DateTime.Now.ToString("yyyyMMdd");
             var newBlob = Container.GetBlockBlobReference("log-" + date + ".txt");
-            String oldContent = "";
-            if (await newBlob.ExistsAsync())
-            {
-                using (StreamReader reader = new StreamReader(await newBlob.OpenReadAsync()))
-                {
-                    oldContent = await reader.ReadToEndAsync();
-                }
-            }
-            else
-            {
-                MemoryStream file = new MemoryStream();
-                await newBlob.UploadFromStreamAsync(file);
-            }
+            String oldContent = await LectorAzureBlob(newBlob);
             using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
             {
                 await writer.WriteAsync(oldContent);
@@ -94,19 +82,7 @@ namespace Logger.Services
         {
             String date = DateTime.Now.ToString("yyyyMMdd");
             var newBlob = Container.GetBlockBlobReference("log-" + date + ".txt");
-            String oldContent = "";
-            if (await newBlob.ExistsAsync())
-            {
-                using (StreamReader reader = new StreamReader(await newBlob.OpenReadAsync()))
-                {
-                    oldContent = await reader.ReadToEndAsync();
-                }
-            }
-            else
-            {
-                MemoryStream file = new MemoryStream();
-                await newBlob.UploadFromStreamAsync(file);
-            }
+            String oldContent = await LectorAzureBlob(newBlob);
             using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
             {
                 await writer.WriteAsync(oldContent);
@@ -118,19 +94,7 @@ namespace Logger.Services
         {
             String date = DateTime.Now.ToString("yyyyMMdd");
             var newBlob = Container.GetBlockBlobReference("log-" + date + ".txt");
-            String oldContent = "";
-            if (await newBlob.ExistsAsync())
-            {
-                using (StreamReader reader = new StreamReader(await newBlob.OpenReadAsync()))
-                {
-                    oldContent = reader.ReadToEnd();
-                }
-            }
-            else
-            {
-                MemoryStream file = new MemoryStream();
-                await newBlob.UploadFromStreamAsync(file);
-            }
+            String oldContent = await LectorAzureBlob(newBlob);
             using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
             {
                 await writer.WriteAsync(oldContent);
@@ -142,19 +106,7 @@ namespace Logger.Services
         {
             String date = DateTime.Now.ToString("yyyyMMdd");
             var newBlob = Container.GetBlockBlobReference("log-" + date + ".txt");
-            String oldContent = "";
-            if (await newBlob.ExistsAsync())
-            {
-                using (StreamReader reader = new StreamReader(await newBlob.OpenReadAsync()))
-                {
-                    oldContent = await reader.ReadToEndAsync();
-                }
-            }
-            else
-            {
-                MemoryStream file = new MemoryStream();
-                await newBlob.UploadFromStreamAsync(file);
-            }
+            String oldContent = await LectorAzureBlob(newBlob);
             using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
             {
                 await writer.WriteAsync(oldContent);
@@ -166,6 +118,18 @@ namespace Logger.Services
         {
             String date = DateTime.Now.ToString("yyyyMMdd");
             var newBlob = Container.GetBlockBlobReference("log-" + date + ".txt");
+            String oldContent = await LectorAzureBlob(newBlob);
+            using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
+            {
+                await writer.WriteAsync(oldContent);
+                await writer.WriteAsync("\n[Fatal]" + component.ToString() + " " + methodName + ": " + exception.Message + "\n" + exception.StackTrace);
+            }
+        }
+
+        #endregion
+
+        private async Task<String> LectorAzureBlob(CloudBlockBlob newBlob)
+        {
             String oldContent = "";
             if (await newBlob.ExistsAsync())
             {
@@ -179,14 +143,8 @@ namespace Logger.Services
                 MemoryStream file = new MemoryStream();
                 await newBlob.UploadFromStreamAsync(file);
             }
-            using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
-            {
-                await writer.WriteAsync(oldContent);
-                await writer.WriteAsync("\n[Fatal]" + component.ToString() + " " + methodName + ": " + exception.Message + "\n" + exception.StackTrace);
-            }
+            return oldContent;
         }
-
-        #endregion
 
         #region Async Methods
         public async Task InfoAsync(string message, Type component, [CallerMemberName] string methodName = "")
