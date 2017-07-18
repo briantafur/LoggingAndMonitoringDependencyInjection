@@ -10,7 +10,7 @@ namespace Logger.Services
 {
     public class AppInsight : ILoggerInterface
     {
-        TelemetryClient Client;
+        readonly TelemetryClient Client;
 
         public AppInsight(String key)
         {
