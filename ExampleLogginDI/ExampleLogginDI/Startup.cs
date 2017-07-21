@@ -67,10 +67,11 @@ namespace ExampleLogginDI
             //services.AddTransient<ILoggerInterface, Log4Net>((_) => new Log4Net(ruta));
 
             //Reading values to azure blob storage from appsettings.json
-            var storageAccountName = Convert.ToString(Configuration.GetSection("AzureStorage").GetValue<String>("Storage_Account_Name"));
-            var azureKey = Convert.ToString(Configuration.GetSection("AzureStorage").GetValue<String>("Azure_Storage_Key"));
-            var containerName = Convert.ToString(Configuration.GetSection("AzureStorage").GetValue<String>("Container_Name"));
-            services.AddTransient<ILoggerInterface, AzureBlobStorage>((_) => new AzureBlobStorage(storageAccountName, azureKey, containerName));
+            var storageAccountName = Configuration.GetSection("AzureStorage").GetValue<String>("Storage_Account_Name");
+            var azureKey = Configuration.GetSection("AzureStorage").GetValue<String>("Azure_Storage_Key");
+            var containerName = Configuration.GetSection("AzureStorage").GetValue<String>("Container_Name");
+            var fileSize = Configuration.GetSection("AzureStorage").GetValue<float>("File_Size");
+            services.AddTransient<ILoggerInterface, AzureBlobStorage>((_) => new AzureBlobStorage(storageAccountName, azureKey, containerName, fileSize));
 
         }
 

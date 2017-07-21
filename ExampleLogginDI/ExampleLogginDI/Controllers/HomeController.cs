@@ -22,7 +22,8 @@ namespace ExampleLogginDI.Controllers
         public IActionResult Index()
         {
             ViewBag.Message = "Haciendo prueba de log";
-            for (int i = 1; i < 10; i++)
+            //_log.InfoAsync("Info Log test", GetType());
+            for (int i = 1; i <= 10; i++)
             {
                 _log.InfoAsync("Info Log " + i, GetType());
             }
