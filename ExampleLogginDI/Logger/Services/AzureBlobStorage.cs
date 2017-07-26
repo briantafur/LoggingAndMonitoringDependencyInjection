@@ -13,12 +13,13 @@ namespace Logger.Services
 {
     public class AzureBlobStorage : ILoggerInterface
     {
+        EventWaitHandle clearCount = new EventWaitHandle(false, EventResetMode.ManualReset);
         CloudBlobContainer Container;
-        float size;
+        readonly float FileSize;
 
-        public AzureBlobStorage(String storageAccountName, String azureKey, String containerName, float size)
+        public AzureBlobStorage(String storageAccountName, String azureKey, String containerName, float fileSize)
         {
-            this.size = size;
+            this.FileSize = fileSize;
             InitializeContainer(storageAccountName, azureKey, containerName);
         }
 
@@ -86,7 +87,7 @@ namespace Logger.Services
                 if (await newBlob.ExistsAsync())
                 {
                     await newBlob.FetchAttributesAsync();
-                    if (newBlob.Properties.Length < (size * 1024))
+                    if (newBlob.Properties.Length < (FileSize * 1024))
                     {
                         String oldContent = await LectorAzureBlob(newBlob);
                         using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
@@ -125,7 +126,7 @@ namespace Logger.Services
                 if (await newBlob.ExistsAsync())
                 {
                     await newBlob.FetchAttributesAsync();
-                    if (newBlob.Properties.Length < (size * 1024))
+                    if (newBlob.Properties.Length < (FileSize * 1024))
                     {
                         String oldContent = await LectorAzureBlob(newBlob);
                         using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
@@ -164,7 +165,7 @@ namespace Logger.Services
                 if (await newBlob.ExistsAsync())
                 {
                     await newBlob.FetchAttributesAsync();
-                    if (newBlob.Properties.Length < (size * 1024))
+                    if (newBlob.Properties.Length < (FileSize * 1024))
                     {
                         String oldContent = await LectorAzureBlob(newBlob);
                         using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
@@ -203,7 +204,7 @@ namespace Logger.Services
                 if (await newBlob.ExistsAsync())
                 {
                     await newBlob.FetchAttributesAsync();
-                    if (newBlob.Properties.Length < (size * 1024))
+                    if (newBlob.Properties.Length < (FileSize * 1024))
                     {
                         String oldContent = await LectorAzureBlob(newBlob);
                         using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
@@ -242,7 +243,7 @@ namespace Logger.Services
                 if (await newBlob.ExistsAsync())
                 {
                     await newBlob.FetchAttributesAsync();
-                    if (newBlob.Properties.Length < (size * 1024))
+                    if (newBlob.Properties.Length < (FileSize * 1024))
                     {
                         String oldContent = await LectorAzureBlob(newBlob);
                         using (StreamWriter writer = new StreamWriter(await newBlob.OpenWriteAsync()))
@@ -286,27 +287,38 @@ namespace Logger.Services
         #region Async Methods
         public async Task InfoAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            InfoAsyncFacade(message, component, methodName).Wait();
+            await Task.Factory.StartNew(() =>
+             {
+                 Monitor.Enter(this);
+                 try
+                 {
+                     InfoAsyncFacade(message, component, methodName).Wait();
+                 }
+                 finally
+                 {
+                     Monitor.Exit(this);
+                 }
+             });
         }
 
         public async Task DebugAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            DebugAsyncFacade(message, component, methodName).Wait();
+            await DebugAsyncFacade(message, component, methodName);
         }
 
         public async Task ErrorAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            ErrorAsyncFacade(exception, component, methodName).Wait();
+            await ErrorAsyncFacade(exception, component, methodName);
         }
 
         public async Task WarningAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            WarningAsyncFacade(message, component, methodName).Wait();
+            await WarningAsyncFacade(message, component, methodName);
         }
 
         public async Task FatalAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            FatalAsyncFacade(exception, component, methodName).Wait();
+            await FatalAsyncFacade(exception, component, methodName);
         }
         #endregion
 

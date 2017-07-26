@@ -71,7 +71,7 @@ namespace ExampleLogginDI
             var azureKey = Configuration.GetSection("AzureStorage").GetValue<String>("Azure_Storage_Key");
             var containerName = Configuration.GetSection("AzureStorage").GetValue<String>("Container_Name");
             var fileSize = Configuration.GetSection("AzureStorage").GetValue<float>("File_Size");
-            services.AddTransient<ILoggerInterface, AzureBlobStorage>((_) => new AzureBlobStorage(storageAccountName, azureKey, containerName, fileSize));
+            services.AddSingleton<ILoggerInterface, AzureBlobStorage>((_) => new AzureBlobStorage(storageAccountName, azureKey, containerName, fileSize));
 
         }
 
