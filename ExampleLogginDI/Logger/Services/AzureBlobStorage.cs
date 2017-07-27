@@ -287,38 +287,87 @@ namespace Logger.Services
         #region Async Methods
         public async Task InfoAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            await Task.Factory.StartNew(() =>
-             {
-                 Monitor.Enter(this);
-                 try
-                 {
-                     InfoAsyncFacade(message, component, methodName).Wait();
-                 }
-                 finally
-                 {
-                     Monitor.Exit(this);
-                 }
-             });
+            Thread t = new Thread(() =>
+            {
+                Monitor.Enter(this);
+                try
+                {
+                    InfoAsyncFacade(message, component, methodName).Wait();
+                }
+                finally
+                {
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
         }
 
         public async Task DebugAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            await DebugAsyncFacade(message, component, methodName);
+            Thread t = new Thread(() =>
+            {
+                Monitor.Enter(this);
+                try
+                {
+                    DebugAsyncFacade(message, component, methodName).Wait();
+                }
+                finally
+                {
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
         }
 
         public async Task ErrorAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            await ErrorAsyncFacade(exception, component, methodName);
+            Thread t = new Thread(() =>
+            {
+                Monitor.Enter(this);
+                try
+                {
+                    ErrorAsyncFacade(exception, component, methodName).Wait();
+                }
+                finally
+                {
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
         }
 
         public async Task WarningAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            await WarningAsyncFacade(message, component, methodName);
+            Thread t = new Thread(() =>
+            {
+                Monitor.Enter(this);
+                try
+                {
+                    WarningAsyncFacade(message, component, methodName).Wait();
+                }
+                finally
+                {
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
         }
 
         public async Task FatalAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            await FatalAsyncFacade(exception, component, methodName);
+            Thread t = new Thread(() =>
+            {
+                Monitor.Enter(this);
+                try
+                {
+                    FatalAsyncFacade(exception, component, methodName).Wait();
+                }
+                finally
+                {
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
         }
         #endregion
 
