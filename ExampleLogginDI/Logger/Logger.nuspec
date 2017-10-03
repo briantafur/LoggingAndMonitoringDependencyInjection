@@ -10,7 +10,7 @@
     <dependencies>
       <group targetFramework=".NETCoreApp1.1">
         <dependency id="Microsoft.NETCore.App" version="1.1.2" exclude="Build,Analyzers" />
-        <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.1.1" exclude="Build,Analyzers" />
+        <dependency id="Microsoft.ApplicationInsights.AspNetCore" version="2.0.0" exclude="Build,Analyzers" />
         <dependency id="Serilog" version="2.5.0" exclude="Build,Analyzers" />
         <dependency id="Serilog.Sinks.Literate" version="3.0.0" exclude="Build,Analyzers" />
         <dependency id="Serilog.Sinks.RollingFile" version="3.3.0" exclude="Build,Analyzers" />
@@ -20,6 +20,6 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="C:\Users\btafur\Source\Repos\LoggingAndMonitoringDependencyInjection\ExampleLogginDI\Logger\bin\Debug\netcoreapp1.1\Logger.dll" target="lib\netcoreapp1.1\Logger.dll" />
+    <file src="C:\Users\brian\source\repos\LoggingAndMonitoringDependencyInjection\ExampleLogginDI\Logger\bin\Debug\netcoreapp2.0\Logger.dll" target="lib\netcoreapp2.0\Logger.dll" />
   </files>
 </package>
