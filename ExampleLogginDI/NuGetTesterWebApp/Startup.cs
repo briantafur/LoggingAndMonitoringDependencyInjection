@@ -38,9 +38,9 @@ namespace NuGetTesterWebApp
             //services.AddTransient<LoggerInterface, AppInsight>((_) => new AppInsight(key));
 
             //Reading the route for the log in the appsettings.json
-            var ruta = Convert.ToString(Configuration.GetSection("LogRoute").GetValue<String>("LocalRoute"));
+            //var ruta = Convert.ToString(Configuration.GetSection("LogRoute").GetValue<String>("LocalRoute"));
             //services.AddTransient<ILoggerInterface, Logger.Services.Serilog>((_) => new Logger.Services.Serilog(ruta));
-            services.AddTransient<ILoggerInterface, Log4Net>((_) => new Log4Net(ruta));
+            //services.AddTransient<ILoggerInterface, Log4Net>((_) => new Log4Net(ruta));
 
             //Reading values to azure blob storage from appsettings.json
             /*var storageAccountName = Configuration.GetSection("AzureStorage").GetValue<String>("Storage_Account_Name");
@@ -48,6 +48,9 @@ namespace NuGetTesterWebApp
             var containerName = Configuration.GetSection("AzureStorage").GetValue<String>("Container_Name");
             var fileSize = Configuration.GetSection("AzureStorage").GetValue<float>("File_Size");
             services.AddTransient<ILoggerInterface, AzureBlobStorage>((_) => new AzureBlobStorage(storageAccountName, azureKey, containerName, fileSize));*/
+
+            //Reading values to amazon s3 from appsettings.json
+            services.AddTransient<ILoggerInterface, AmazonS3Storage>();
 
         }
 

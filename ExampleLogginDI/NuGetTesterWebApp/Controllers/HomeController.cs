@@ -20,15 +20,14 @@ namespace NuGetTesterWebApp.Controllers
         public IActionResult Index()
         {
             ViewBag.Message = "Haciendo prueba de log";
-            for (int i = 1; i <= 5; i++)
+            for (int i = 1; i <= 10; i++)
             {
                 _log.InfoAsync("Info Log " + i, GetType());
             }
-            _log.DebugAsync("Debug log", GetType());
+            /*_log.DebugAsync("Debug log", GetType());
             _log.ErrorAsync(new Exception("Error Log"), GetType());
             _log.WarningAsync("Warning Log", GetType());
-            _log.FatalAsync(new Exception("Fatal Log"), GetType());
-            return View();
+            _log.FatalAsync(new Exception("Fatal Log"), GetType());*/
             return View();
         }
 

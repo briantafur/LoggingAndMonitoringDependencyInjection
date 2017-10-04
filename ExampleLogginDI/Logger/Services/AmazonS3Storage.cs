@@ -4,17 +4,38 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using Amazon.S3;
+using Amazon.S3.Transfer;
+using Amazon.S3.Model;
+using System.Threading;
+using System.IO;
 
 namespace Logger.Services
 {
-    class AmazonS3Storage : ILoggerInterface
+    public class AmazonS3Storage : ILoggerInterface
     {
-        public void Debug(string message, Type component, [CallerMemberName] string methodName = "")
+
+        string bucketName = "yuxiglobal-test-logfiles";
+        //string keyName = "*** key name when object is created ***";
+        //string filePath = "*** absolute path to a sample file to upload ***";
+        IAmazonS3 client;
+
+
+        public AmazonS3Storage()
         {
-            throw new NotImplementedException();
+
         }
 
-        public Task DebugAsync(string message, Type component, [CallerMemberName] string methodName = "")
+        #region methods
+
+        public void Info(string message, Type component, [CallerMemberName] string methodName = "")
+        {
+
+
+
+
+        }
+
+        public void Debug(string message, Type component, [CallerMemberName] string methodName = "")
         {
             throw new NotImplementedException();
         }
@@ -24,7 +45,7 @@ namespace Logger.Services
             throw new NotImplementedException();
         }
 
-        public Task ErrorAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
+        public void Warning(string message, Type component, [CallerMemberName] string methodName = "")
         {
             throw new NotImplementedException();
         }
@@ -34,47 +55,75 @@ namespace Logger.Services
             throw new NotImplementedException();
         }
 
-        public Task FatalAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
-        {
-            throw new NotImplementedException();
-        }
+        #endregion
 
-        public void Info(string message, Type component, [CallerMemberName] string methodName = "")
-        {
-            throw new NotImplementedException();
-        }
+        #region asyncmethods
 
-        public Task InfoAsync(string message, Type component, [CallerMemberName] string methodName = "")
+        public async Task InfoAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            /*    GetObjectRequest getObjRequest = new GetObjectRequest()
-        .WithBucketName(amazonSettings.BucketName)
-        .WithKey(_fileKey);*/
-
-            /*GetObjectRequest nada = new GetObjectRequest();
-            using (AmazonS3 client = AWSClientFactory.CreateAmazonS3Client(
-                amazonSettings.AccessKey,
-                amazonSettings.SecretAccessKey))
-            using (GetObjectResponse getObjRespone = client.GetObject(getObjRequest))
-            using (Stream amazonStream = getObjRespone.ResponseStream)
+            Thread t = new Thread(() =>
             {
-                StreamReader amazonStreamReader = new StreamReader(amazonStream);
-                tempGsContact = new GSContact();
-                while ((_fileLine = amazonStreamReader.ReadLine()) != null)
+                Monitor.Enter(this);
+                try
                 {
-                    if (_fileLine.Equals("END:VCARD"))
-                    {
-                        // Make process 1
-                    }
-                    else if (!_fileLine.Equals(string.Empty))
-                    {
-                        //Make process 2
-                    }
+                    InfoAsyncNada(message, component, methodName).Wait();
                 }
-            }*/
+                finally
+                {
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
+        }
+
+        public async Task InfoAsyncNada(string message, Type component, [CallerMemberName] string methodName = "")
+        {
+            String date = DateTime.Now.ToString("yyyyMMdd");
+            String hour = DateTime.Now.ToString("HH:mm:ss");
+            string keyName = "Infolog-" + date + ".txt";
+            client = client = new AmazonS3Client("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast1);
+
+
+            GetObjectRequest request = new GetObjectRequest
+            {
+                BucketName = bucketName,
+                Key = keyName
+            };
+            PutObjectRequest putRequest1;
+            try
+            {
+                string responseBody = "";
+                using (GetObjectResponse response = await client.GetObjectAsync(request))
+                using (Stream responseStream = response.ResponseStream)
+                using (StreamReader reader = new StreamReader(responseStream))
+                {
+                    responseBody = reader.ReadToEnd();
+                }
+                putRequest1 = new PutObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = keyName,
+                    ContentBody = responseBody + "\n" + hour + "[Information]" + component.ToString() + " " + methodName + ": " + message
+                };
+            }
+            catch (AmazonS3Exception e)
+            {
+                putRequest1 = new PutObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = keyName,
+                    ContentBody = "\n" + hour + "[Information]" + component.ToString() + " " + methodName + ": " + message
+                };
+            }
+            await client.PutObjectAsync(putRequest1);
+        }
+
+        public Task DebugAsync(string message, Type component, [CallerMemberName] string methodName = "")
+        {
             throw new NotImplementedException();
         }
 
-        public void Warning(string message, Type component, [CallerMemberName] string methodName = "")
+        public Task ErrorAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
             throw new NotImplementedException();
         }
@@ -83,6 +132,13 @@ namespace Logger.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task FatalAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
 
         /*static void WritingAnObject()
         {
