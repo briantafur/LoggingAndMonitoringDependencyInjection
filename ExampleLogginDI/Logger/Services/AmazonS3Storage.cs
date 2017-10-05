@@ -8,6 +8,10 @@ using Amazon.S3.Transfer;
 using Amazon.S3.Model;
 using System.Threading;
 using System.IO;
+using Amazon.DynamoDBv2;
+using Amazon.DynamoDBv2.Model;
+using Amazon.Runtime;
+
 
 namespace Logger.Services
 {
@@ -22,37 +26,109 @@ namespace Logger.Services
 
         public AmazonS3Storage()
         {
+           
+        }
 
+        private void createTable()
+        {
+            AmazonDynamoDBClient client = new AmazonDynamoDBClient("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast2);
+
+             CreateTableRequest createRequest = new CreateTableRequest
+             {
+                 TableName = "Logs",
+                 AttributeDefinitions = new List<AttributeDefinition>()
+             {
+                 new AttributeDefinition
+                 {
+                     AttributeName = "Fecha",
+                     AttributeType = "S"
+                 },
+                 new AttributeDefinition
+                 {
+                     AttributeName = "Hora",
+                     AttributeType = "S"
+                 }
+             },
+                 KeySchema = new List<KeySchemaElement>()
+             {
+                 new KeySchemaElement
+                 {
+                     AttributeName = "Fecha",
+                     KeyType = "HASH"
+                 },
+                 new KeySchemaElement
+                 {
+                     AttributeName = "Hora",
+                     KeyType = "RANGE"
+                 }
+             },
+             };
+             createRequest.ProvisionedThroughput = new ProvisionedThroughput(1, 1);
+
+             client.CreateTableAsync(createRequest).Wait();
+        }
+
+
+        private async Task DBRegister(String type, String component, String methodName, String message)
+        {
+            AmazonDynamoDBClient client = new AmazonDynamoDBClient("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast2);
+
+            String date = DateTime.Now.ToString("yyyy-MM-dd");
+            String hour = DateTime.Now.ToString("HH:mm:ss");
+
+            var request = new PutItemRequest
+            {
+                TableName = "Logs",
+                Item = new Dictionary<string, AttributeValue>()
+            {
+                { "Fecha", new AttributeValue {
+                      S = date
+                  }},
+                { "Hora", new AttributeValue {
+                      S = hour
+                  }},
+                { "Tipo", new AttributeValue {
+                      S = type
+                  }},
+                { "Componente", new AttributeValue {
+                      S = component
+                  }},
+                { "Metodo", new AttributeValue {
+                      S = methodName
+                  }},
+                { "Mensaje", new AttributeValue {
+                      S = message
+                  }}
+            }
+            };
+            client.PutItemAsync(request);
         }
 
         #region methods
 
         public void Info(string message, Type component, [CallerMemberName] string methodName = "")
         {
-
-
-
-
+            DBRegister("Information", component.ToString(), methodName, message).Wait();
         }
 
         public void Debug(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            throw new NotImplementedException();
+            DBRegister("Debug", component.ToString(), methodName, message).Wait();
         }
 
         public void Error(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            throw new NotImplementedException();
+            DBRegister("Error", component.ToString(), methodName, exception.Message).Wait();
         }
 
         public void Warning(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            throw new NotImplementedException();
+            DBRegister("Warning", component.ToString(), methodName, message).Wait();
         }
 
         public void Fatal(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            throw new NotImplementedException();
+            DBRegister("Fatal", component.ToString(), methodName, exception.Message).Wait();
         }
 
         #endregion
@@ -66,7 +142,24 @@ namespace Logger.Services
                 Monitor.Enter(this);
                 try
                 {
-                    InfoAsyncNada(message, component, methodName).Wait();
+                    DBRegister("Information", component.ToString(), methodName, message).Wait();
+                }
+                finally
+                {
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
+        }    
+
+        public async Task DebugAsync(string message, Type component, [CallerMemberName] string methodName = "")
+        {
+            Thread t = new Thread(() =>
+            {
+                Monitor.Enter(this);
+                try
+                {
+                    DBRegister("Debug", component.ToString(), methodName, message).Wait();
                 }
                 finally
                 {
@@ -76,66 +169,55 @@ namespace Logger.Services
             t.Start();
         }
 
-        public async Task InfoAsyncNada(string message, Type component, [CallerMemberName] string methodName = "")
+        public async Task ErrorAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            String date = DateTime.Now.ToString("yyyyMMdd");
-            String hour = DateTime.Now.ToString("HH:mm:ss");
-            string keyName = "Infolog-" + date + ".txt";
-            client = client = new AmazonS3Client("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast1);
-
-
-            GetObjectRequest request = new GetObjectRequest
+            Thread t = new Thread(() =>
             {
-                BucketName = bucketName,
-                Key = keyName
-            };
-            PutObjectRequest putRequest1;
-            try
-            {
-                string responseBody = "";
-                using (GetObjectResponse response = await client.GetObjectAsync(request))
-                using (Stream responseStream = response.ResponseStream)
-                using (StreamReader reader = new StreamReader(responseStream))
+                Monitor.Enter(this);
+                try
                 {
-                    responseBody = reader.ReadToEnd();
+                    DBRegister("Error", component.ToString(), methodName, exception.Message).Wait();
                 }
-                putRequest1 = new PutObjectRequest
+                finally
                 {
-                    BucketName = bucketName,
-                    Key = keyName,
-                    ContentBody = responseBody + "\n" + hour + "[Information]" + component.ToString() + " " + methodName + ": " + message
-                };
-            }
-            catch (AmazonS3Exception e)
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
+        }
+
+        public async Task WarningAsync(string message, Type component, [CallerMemberName] string methodName = "")
+        {
+            Thread t = new Thread(() =>
             {
-                putRequest1 = new PutObjectRequest
+                Monitor.Enter(this);
+                try
                 {
-                    BucketName = bucketName,
-                    Key = keyName,
-                    ContentBody = "\n" + hour + "[Information]" + component.ToString() + " " + methodName + ": " + message
-                };
-            }
-            await client.PutObjectAsync(putRequest1);
+                    DBRegister("Warning", component.ToString(), methodName, message).Wait();
+                }
+                finally
+                {
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
         }
 
-        public Task DebugAsync(string message, Type component, [CallerMemberName] string methodName = "")
+        public async Task FatalAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            throw new NotImplementedException();
-        }
-
-        public Task ErrorAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task WarningAsync(string message, Type component, [CallerMemberName] string methodName = "")
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task FatalAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
-        {
-            throw new NotImplementedException();
+            Thread t = new Thread(() =>
+            {
+                Monitor.Enter(this);
+                try
+                {
+                    DBRegister("Fatal", component.ToString(), methodName, exception.Message).Wait();
+                }
+                finally
+                {
+                    Monitor.Exit(this);
+                }
+            });
+            t.Start();
         }
 
         #endregion
@@ -184,7 +266,53 @@ namespace Logger.Services
                         , amazonS3Exception.Message);
                 }
             }
-        }*/
+        }
+        
+         public async Task InfoAsyncNada(string message, Type component, [CallerMemberName] string methodName = "")
+        {
+            String date = DateTime.Now.ToString("yyyyMMdd");
+            String hour = DateTime.Now.ToString("HH:mm:ss");
+            string keyName = "Infolog-" + date + ".txt";
+            client = client = new AmazonS3Client("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast1);
+
+
+            GetObjectRequest request = new GetObjectRequest
+            {
+                BucketName = bucketName,
+                Key = keyName
+            };
+            PutObjectRequest putRequest1;
+            try
+            {
+                string responseBody = "";
+                using (GetObjectResponse response = await client.GetObjectAsync(request))
+                using (Stream responseStream = response.ResponseStream)
+                using (StreamReader reader = new StreamReader(responseStream))
+                {
+                    responseBody = reader.ReadToEnd();
+                }
+                putRequest1 = new PutObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = keyName,
+                    ContentBody = responseBody + "\n" + hour + "[Information]" + component.ToString() + " " + methodName + ": " + message
+                };
+            }
+            catch (AmazonS3Exception e)
+            {
+                putRequest1 = new PutObjectRequest
+                {
+                    BucketName = bucketName,
+                    Key = keyName,
+                    ContentBody = "\n" + hour + "[Information]" + component.ToString() + " " + methodName + ": " + message
+                };
+            }
+            await client.PutObjectAsync(putRequest1);
+        }
+         
+         
+         
+         */
 
 
 

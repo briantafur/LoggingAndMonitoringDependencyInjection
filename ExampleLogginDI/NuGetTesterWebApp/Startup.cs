@@ -50,7 +50,7 @@ namespace NuGetTesterWebApp
             services.AddTransient<ILoggerInterface, AzureBlobStorage>((_) => new AzureBlobStorage(storageAccountName, azureKey, containerName, fileSize));*/
 
             //Reading values to amazon s3 from appsettings.json
-            services.AddTransient<ILoggerInterface, AmazonS3Storage>();
+            services.AddSingleton<ILoggerInterface, AmazonS3Storage>();
 
         }
 
