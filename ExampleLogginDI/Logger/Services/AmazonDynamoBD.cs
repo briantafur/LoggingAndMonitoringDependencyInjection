@@ -29,7 +29,7 @@ namespace Logger.Services
            
         }
 
-        private void createTable()
+        private void CreateTable()
         {
             AmazonDynamoDBClient client = new AmazonDynamoDBClient("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast2);
 
@@ -71,15 +71,17 @@ namespace Logger.Services
 
         private async Task DBRegister(String type, String component, String methodName, String message)
         {
-            AmazonDynamoDBClient client = new AmazonDynamoDBClient("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast2);
-
-            String date = DateTime.Now.ToString("yyyy-MM-dd");
-            String hour = DateTime.Now.ToString("HH:mm:ss");
-
-            var request = new PutItemRequest
+            using (AmazonDynamoDBClient client = new AmazonDynamoDBClient("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast2))
             {
-                TableName = "Logs",
-                Item = new Dictionary<string, AttributeValue>()
+
+                String date = DateTime.Now.ToString("yyyy-MM-dd");
+                //String hour = DateTime.Now.ToString("HH:mm:ss");
+                String hour = DateTime.Now.ToString("HH:mm:ss.ffff");
+
+                var request = new PutItemRequest
+                {
+                    TableName = "Logs",
+                    Item = new Dictionary<string, AttributeValue>()
             {
                 { "Fecha", new AttributeValue {
                       S = date
@@ -100,8 +102,9 @@ namespace Logger.Services
                       S = message
                   }}
             }
-            };
-            client.PutItemAsync(request);
+                };
+                await client.PutItemAsync(request);
+            }
         }
 
         #region methods
@@ -137,87 +140,92 @@ namespace Logger.Services
 
         public async Task InfoAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            Thread t = new Thread(() =>
+            /*Thread t = new Thread(() =>
             {
                 Monitor.Enter(this);
                 try
                 {
-                    DBRegister("Information", component.ToString(), methodName, message).Wait();
+                    DBRegister("Information", component.ToString(), methodName, message);
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
             });
-            t.Start();
+            t.Start();*/
+            await DBRegister("Information", component.ToString(), methodName, message);
         }    
 
         public async Task DebugAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            Thread t = new Thread(() =>
+            /*Thread t = new Thread(() =>
             {
                 Monitor.Enter(this);
                 try
                 {
-                    DBRegister("Debug", component.ToString(), methodName, message).Wait();
+                    DBRegister("Debug", component.ToString(), methodName, message);
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
             });
-            t.Start();
+            t.Start();*/
+            await DBRegister("Debug", component.ToString(), methodName, message);
         }
 
         public async Task ErrorAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            Thread t = new Thread(() =>
+            /*Thread t = new Thread(() =>
             {
                 Monitor.Enter(this);
                 try
                 {
-                    DBRegister("Error", component.ToString(), methodName, exception.Message).Wait();
+                    DBRegister("Error", component.ToString(), methodName, exception.Message);
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
             });
-            t.Start();
+            t.Start();*/
+            await DBRegister("Error", component.ToString(), methodName, exception.Message);
         }
 
         public async Task WarningAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
-            Thread t = new Thread(() =>
+            /*Thread t = new Thread(() =>
             {
                 Monitor.Enter(this);
                 try
                 {
-                    DBRegister("Warning", component.ToString(), methodName, message).Wait();
+                    DBRegister("Warning", component.ToString(), methodName, message);
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
             });
-            t.Start();
+            t.Start();*/
+            await DBRegister("Warning", component.ToString(), methodName, message);
         }
 
         public async Task FatalAsync(Exception exception, Type component, [CallerMemberName] string methodName = "")
         {
-            Thread t = new Thread(() =>
+            /*Thread t = new Thread(() =>
             {
                 Monitor.Enter(this);
                 try
                 {
-                    DBRegister("Fatal", component.ToString(), methodName, exception.Message).Wait();
+                    DBRegister("Fatal", component.ToString(), methodName, exception.Message);
                 }
                 finally
                 {
                     Monitor.Exit(this);
                 }
             });
-            t.Start();
+            t.Start();*/
+            await DBRegister("Fatal", component.ToString(), methodName, exception.Message);
         }
 
         #endregion
