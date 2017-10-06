@@ -26,17 +26,17 @@ namespace Logger.Services
 
         public AmazonS3Storage()
         {
-           
+
         }
 
         private void CreateTable()
         {
             AmazonDynamoDBClient client = new AmazonDynamoDBClient("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast2);
 
-             CreateTableRequest createRequest = new CreateTableRequest
-             {
-                 TableName = "Logs",
-                 AttributeDefinitions = new List<AttributeDefinition>()
+            CreateTableRequest createRequest = new CreateTableRequest
+            {
+                TableName = "Logs",
+                AttributeDefinitions = new List<AttributeDefinition>()
              {
                  new AttributeDefinition
                  {
@@ -49,7 +49,7 @@ namespace Logger.Services
                      AttributeType = "S"
                  }
              },
-                 KeySchema = new List<KeySchemaElement>()
+                KeySchema = new List<KeySchemaElement>()
              {
                  new KeySchemaElement
                  {
@@ -62,10 +62,10 @@ namespace Logger.Services
                      KeyType = "RANGE"
                  }
              },
-             };
-             createRequest.ProvisionedThroughput = new ProvisionedThroughput(1, 1);
+            };
+            createRequest.ProvisionedThroughput = new ProvisionedThroughput(1, 1);
 
-             client.CreateTableAsync(createRequest).Wait();
+            client.CreateTableAsync(createRequest).Wait();
         }
 
 
@@ -154,7 +154,7 @@ namespace Logger.Services
             });
             t.Start();*/
             await DBRegister("Information", component.ToString(), methodName, message);
-        }    
+        }
 
         public async Task DebugAsync(string message, Type component, [CallerMemberName] string methodName = "")
         {
