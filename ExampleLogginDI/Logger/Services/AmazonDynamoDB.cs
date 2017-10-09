@@ -19,14 +19,15 @@ namespace Logger.Services
     {
 
         string bucketName = "yuxiglobal-test-logfiles";
-        //string keyName = "*** key name when object is created ***";
-        //string filePath = "*** absolute path to a sample file to upload ***";
+        string keyName = "";
+        string secretKey = "";
         IAmazonS3 client;
 
 
-        public AmazonS3Storage()
+        public AmazonS3Storage(String key, String secretKey)
         {
-
+            this.keyName = key;
+            this.secretKey = secretKey;
         }
 
         private void CreateTable()
@@ -71,7 +72,7 @@ namespace Logger.Services
 
         private async Task DBRegister(String type, String component, String methodName, String message)
         {
-            using (AmazonDynamoDBClient client = new AmazonDynamoDBClient("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast2))
+            using (AmazonDynamoDBClient client = new AmazonDynamoDBClient(keyName, secretKey, Amazon.RegionEndpoint.USEast2))
             {
 
                 String date = DateTime.Now.ToString("yyyy-MM-dd");
