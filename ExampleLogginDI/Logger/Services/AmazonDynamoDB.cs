@@ -32,7 +32,7 @@ namespace Logger.Services
 
         private void CreateTable()
         {
-            AmazonDynamoDBClient client = new AmazonDynamoDBClient("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast2);
+            AmazonDynamoDBClient client = new AmazonDynamoDBClient(keyName, secretKey, Amazon.RegionEndpoint.USEast2);
 
             CreateTableRequest createRequest = new CreateTableRequest
             {
@@ -282,7 +282,7 @@ namespace Logger.Services
             String date = DateTime.Now.ToString("yyyyMMdd");
             String hour = DateTime.Now.ToString("HH:mm:ss");
             string keyName = "Infolog-" + date + ".txt";
-            client = client = new AmazonS3Client("AKIAIBCOZRNVGWYWAHKQ", "vOCWeBYAz1Upj3mqDfhEpffYPV1TobZMekQJTLmZ", Amazon.RegionEndpoint.USEast1);
+            client = client = new AmazonS3Client(keyName, secretKey, Amazon.RegionEndpoint.USEast1);
 
 
             GetObjectRequest request = new GetObjectRequest
